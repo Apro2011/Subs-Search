@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from cc_app.models import VideoUpload
 from cc_app.serializers import OutputLocationSerializer
 from cc_app.models import OutputLocationSetter
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 import subprocess
@@ -21,20 +21,19 @@ import subprocess
 
 
 class FileUploadView(APIView):
-    parser_classes = [FileUploadParser]
+    parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request, filename, format="mp4"):
+    def patch(self, request, format="mp4"):
         file_obj = request.data.get("file")
         # serializer = VideoUploadSerializer(data=file_obj)
         video_upload = VideoUpload.objects.create(video_file=file_obj)
         output_subtitle_path = f"output/subs{video_upload.pk}.srt"
 
-        destination_path = f"input/{filename}"
-        video_path = destination_path
+        video_path = f"input/{file_obj.name}"
 
         ccextractor_command = f"ccextractor -o {output_subtitle_path} {video_path}"
 
-        result = subprocess.run(ccextractor_command, shell=True)
+        result = subprocess.run(ccextractor_command, shell=True, check=True)
 
         if result.returncode == 0:
             # The subtitle extraction was successful

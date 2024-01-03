@@ -8,3 +8,4 @@ class OutputLocationSetter(models.Model):
 
 class VideoUpload(models.Model):
     video_file = models.FileField(upload_to="")
+    # video_file_name = models.CharField(max_length=100)

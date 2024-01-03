@@ -130,17 +130,5 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {
-            "location": os.path.join(BASE_DIR, "input"),
-            "base_url": "/input/",
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
-
-UPLOADED_FILES_USE_URL = True
+MEDIA_URL = "/input/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "input")
